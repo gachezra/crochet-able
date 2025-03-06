@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import Link from 'next/link';
+import { useParams } from "next/navigation";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useCart } from '@/components/CartContext';
@@ -70,9 +71,10 @@ const crochetItems = [
   },
 ];
 
-export default function ProductPage({ params }) {
-  const id = parseInt(params.id);
-  const product = crochetItems.find(item => item.id === id);
+export default function ProductPage() {
+  const { id } = useParams();
+  const productId = parseInt(id);
+  const product = crochetItems.find(item => item.id === productId);
   const { addItemToCart } = useCart();
   
   const [selectedColor, setSelectedColor] = useState(product?.colors[0] || '');
