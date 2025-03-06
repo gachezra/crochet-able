@@ -86,7 +86,7 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {filteredItems.map((item) => (
             <Link href={`/product/${item.id}`} key={item.id}>
-              <div className="card p-3 mx-6 md:mx-4">
+              <div className="card p-3 mx-6 md:mx-4 h-100">
                 <div className="relative h-48">
                   <img 
                     src={item.image} 
@@ -98,7 +98,7 @@ export default function Home() {
                       item.accent === 'pink' ? 'bg-pink-400' : 'bg-sky-400'
                     }`}
                   >
-                    ${item.price}
+                    Nis. {item.price}
                   </div>
                 </div>
                 <div className="p-4">

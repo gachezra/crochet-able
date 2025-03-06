@@ -106,12 +106,11 @@ export default function ProductPage({ params }) {
     : 'bg-sky-400 hover:bg-sky-500';
     
   const handleAddToCart = () => {
-    // In a real application, you would add to cart logic here
     addItemToCart({
       id: product.id,
       name: product.name,
       price: product.price,
-      quantity: 1, // or use the selected quantity
+      quantity: quantity
     });
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
@@ -134,13 +133,13 @@ export default function ProductPage({ params }) {
               <img 
                 src={product.image} 
                 alt={product.name} 
-                className="w-full h-72 md:h-full object-cover transition-all duration-500 hover:scale-105"
+                className="w-full h-72 md:h-full object-cover md:object-contain p-4 transition-all duration-500 hover:scale-105"
               />
             </div>
             
             <div className="md:w-1/2 p-8">
               <h1 className="text-3xl font-bold mb-2 text-gray-800">{product.name}</h1>
-              <p className="text-2xl text-gray-700 mb-4 font-light">${product.price}</p>
+              <p className="text-2xl text-gray-700 mb-4 font-light">Nis. {product.price}</p>
               <p className="text-gray-600 mb-8 leading-relaxed">{product.description}</p>
               
               <div className={`border-t ${borderAccent} pt-8 mb-8`}>
