@@ -2,9 +2,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useParams } from "next/navigation";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { ChevronLeft, Check } from 'lucide-react';
+import SharedInvoice from '@/components/SharedInvoice';
 
 // Mock data for crochet items (same as in app/page.js)
 const crochetItems = [
@@ -12,7 +14,7 @@ const crochetItems = [
     id: 1,
     name: 'Cozy Blanket',
     price: 45.99,
-    image: '/api/placeholder/400/300',
+    image: 'https://picsum.photos/400/300?random=6',
     description: 'A beautiful handmade blanket perfect for chilly evenings.',
     accent: 'pink',
     colors: ['White', 'Beige', 'Gray', 'Pink', 'Blue'],
@@ -22,7 +24,7 @@ const crochetItems = [
     id: 2,
     name: 'Baby Hat',
     price: 12.99,
-    image: '/api/placeholder/400/300',
+    image: 'https://picsum.photos/400/300?random=6',
     description: 'Adorable hat for your little one, made with soft yarn.',
     accent: 'blue',
     colors: ['White', 'Pink', 'Blue', 'Yellow', 'Green'],
@@ -32,7 +34,7 @@ const crochetItems = [
     id: 3,
     name: 'Amigurumi Elephant',
     price: 24.99,
-    image: '/api/placeholder/400/300',
+    image: 'https://picsum.photos/400/300?random=6',
     description: 'Cute elephant toy, perfect for children of all ages.',
     accent: 'pink',
     colors: ['Gray', 'Pink', 'Blue', 'Green'],
@@ -42,7 +44,7 @@ const crochetItems = [
     id: 4,
     name: 'Decorative Basket',
     price: 19.99,
-    image: '/api/placeholder/400/300',
+    image: 'https://picsum.photos/400/300?random=6',
     description: 'Stylish basket for organizing your home.',
     accent: 'blue',
     colors: ['White', 'Beige', 'Gray', 'Black'],
@@ -52,7 +54,7 @@ const crochetItems = [
     id: 5,
     name: 'Scarf',
     price: 29.99,
-    image: '/api/placeholder/400/300',
+    image: 'https://picsum.photos/400/300?random=6',
     description: 'Warm and stylish scarf for winter days.',
     accent: 'pink',
     colors: ['White', 'Gray', 'Black', 'Red', 'Blue'],
@@ -62,7 +64,7 @@ const crochetItems = [
     id: 6,
     name: 'Plant Hanger',
     price: 15.99,
-    image: '/api/placeholder/400/300',
+    image: 'https://picsum.photos/400/300?random=6',
     description: 'Beautiful macrame plant hanger for your indoor plants.',
     accent: 'blue',
     colors: ['White', 'Beige', 'Gray'],
@@ -71,8 +73,9 @@ const crochetItems = [
 ];
 
 export default function CheckoutPage({ params }) {
-  const id = parseInt(params.id);
-  const product = crochetItems.find(item => item.id === id);
+  const { id } = useParams();
+  const productId = parseInt(id);
+  const product = crochetItems.find(item => item.id === productId);
   const searchParams = useSearchParams();
   
   // Form state
@@ -171,79 +174,21 @@ export default function CheckoutPage({ params }) {
         <Navbar />
         
         <div className="container mx-auto px-4 py-8">
-          <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                <Check className="h-8 w-8 text-green-600" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-800">Order Placed Successfully!</h1>
-              <p className="text-gray-600 mt-2">Thank you for your order.</p>
-            </div>
+          <div className="max-w-2xl mx-auto">
+            {/* Use the shared invoice component for confirmation */}
+            <SharedInvoice 
+              items={invoiceData.items}
+              total={invoiceData.subtotal}
+              tax={invoiceData.tax}
+              shipping={invoiceData.shipping}
+              customerInfo={invoiceData.customerInfo}
+              isModal={false}
+              orderPlaced={true}
+            />
             
-            <div className="border p-4 rounded-lg mb-6 bg-gray-50">
-              <h2 className="text-lg font-semibold mb-2">Order Summary</h2>
-              <p className="text-gray-700">Invoice #: {invoiceData.invoiceNumber}</p>
-              <p className="text-gray-700">Order Date: {invoiceData.orderDate}</p>
-            </div>
-            
-            <div className="mb-6">
-              <h2 className="text-lg font-semibold mb-2">Items</h2>
-              <div className="border-t border-b py-4">
-                <div className="flex items-center">
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="w-16 h-16 object-cover rounded"
-                  />
-                  <div className="ml-4 flex-1">
-                    <h3 className="font-medium">{product.name}</h3>
-                    <p className="text-gray-500 text-sm">
-                      Color: {selectedColor}, Size: {selectedSize}, Qty: {quantity}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium">${(product.price * quantity).toFixed(2)}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mt-4 space-y-2">
-                <div className="flex justify-between">
-                  <p className="text-gray-600">Subtotal</p>
-                  <p>${invoiceData.subtotal.toFixed(2)}</p>
-                </div>
-                <div className="flex justify-between">
-                  <p className="text-gray-600">Tax</p>
-                  <p>${invoiceData.tax.toFixed(2)}</p>
-                </div>
-                <div className="flex justify-between">
-                  <p className="text-gray-600">Shipping</p>
-                  <p>${invoiceData.shipping.toFixed(2)}</p>
-                </div>
-                <div className="flex justify-between font-bold pt-2 border-t">
-                  <p>Total</p>
-                  <p>${invoiceData.total.toFixed(2)}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mb-6">
-              <h2 className="text-lg font-semibold mb-2">Shipping Information</h2>
-              <p>{formData.firstName} {formData.lastName}</p>
-              <p>{formData.address}</p>
-              <p>{formData.city}, {formData.state} {formData.zip}</p>
-              <p>{formData.country}</p>
-              <p>{formData.email}</p>
-              <p>{formData.phone}</p>
-            </div>
-            
-            <p className="text-gray-600 mb-6">
-              A confirmation email has been sent to your email address with all the order details.
-            </p>
-            
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-8">
               <Link href="/">
-                <button className="btn-primary">
+                <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors">
                   Continue Shopping
                 </button>
               </Link>
@@ -408,7 +353,7 @@ export default function CheckoutPage({ params }) {
                           onChange={handleInputChange}
                         />
                       </div>
-                      <div>
+                      {/* <div>
                         <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="country">
                           Country*
                         </label>
@@ -425,7 +370,7 @@ export default function CheckoutPage({ params }) {
                           <option value="United Kingdom">United Kingdom</option>
                           <option value="Australia">Australia</option>
                         </select>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -483,21 +428,21 @@ export default function CheckoutPage({ params }) {
               <div className="space-y-2 border-b pb-4 mb-4">
                 <div className="flex justify-between">
                   <p className="text-gray-600">Price × {quantity}</p>
-                  <p>${(product.price * quantity).toFixed(2)}</p>
+                  <p>Nis. {(product.price * quantity).toFixed(2)}</p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-gray-600">Tax (7%)</p>
-                  <p>${(product.price * quantity * 0.07).toFixed(2)}</p>
+                  <p>Nis. {(product.price * quantity * 0.07).toFixed(2)}</p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-gray-600">Shipping</p>
-                  <p>$5.99</p>
+                  <p>Nis. 5.99</p>
                 </div>
               </div>
               
               <div className="flex justify-between font-bold text-lg">
                 <p>Total</p>
-                <p>${(product.price * quantity * 1.07 + 5.99).toFixed(2)}</p>
+                <p>Nis. {(product.price * quantity * 1.07 + 5.99).toFixed(2)}</p>
               </div>
             </div>
           </div>
